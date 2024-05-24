@@ -16,7 +16,7 @@ import csv
 DATA_PATH = "data/Books"
 CHROMA_PATH = "data/Vector_Database/"
 
-Open_ai = "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"
+Open_ai = "sk-LTPToGpHWlPp74IFFWpeT3BlbkFJH3FUaEjjpRVS8CyFeiG"
 
 def main():
     generate_data_store()
