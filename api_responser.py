@@ -10,22 +10,8 @@ from langchain_openai import ChatOpenAI
 import shutil
 import os
 
-# # Imports not in use yet, but might be used if needed
-# from langchain_community.document_loaders import PyPDFDirectoryLoader
-# from langchain.text_splitter import RecursiveCharacterTextSplitter
-# from langchain_community.document_loaders import DirectoryLoader
-# from langchain_community.document_loaders import CSVLoader
-# from langchain.docstore.document import Document
-# from langchain.schema.document import Document
-# from dataclasses import dataclass
-# import argparse
-# import chromadb
-# import csv
 
 
-# PDF_PATH = "testing_data/Books/"          # Directory of  PDF files
-# CSV_PATH = "testing_data/Tik_Tok_Data/"   # Directory of CSV files 
-# TEXT_PATH = "data.txt"                       # Directory of text files
 CHROMA_PATH = "Vector_Database/"             # Directory for saving the vector database
 
 
@@ -33,42 +19,10 @@ CHROMA_PATH = "Vector_Database/"             # Directory for saving the vector d
 Open_ai = "sk-"
 
 
-# manipulating a text file to add all the api data in it
-# from api_response import api_data
-# def saving_api_response_to_txt():
-#     with open('data.txt', 'w') as f:
-#         for item in api_data:
-#             f.write("%s\n" % item)
-#     print("Data written to data.txt successfully!")
-
-
-# # Loading that text file
-# def load_data():
-#     data_loader = TextLoader(TEXT_PATH)
-#     loaded_data = data_loader.load()
-
-#     print("Data loaded successfully!")
-
-#     return loaded_data
-
-# # Loading CSV files >>(TESTING PURPOSES)
-# def load_data():
-#     data_loader = CSVLoader(file_path=CSV_PATH, encoding="utf-8")
-#     loaded_data = data_loader.load()
-#     return loaded_data
-
-# # Loading PDF files >>(TESTING PURPOSES)
-# def load_data():
-#     data_loader = PyPDFDirectoryLoader(file_path=PDF_PATH, encoding="utf-8")
-#     loaded_data = data_loader.load()
-#     return loaded_data
-
-
-
 # SEMANTIC CHUNKER (MOST INTELLIGENT)
 def split_data():
     
-    from api_response import api_data
+    from api_text import api_data
 
     api_data_str = str(api_data)
 
@@ -78,20 +32,6 @@ def split_data():
     chunks = text_splitter.create_documents([api_data_str])
     print(f"Split {len(api_data)} data sets into {len(chunks)} chunks.")
     return chunks
-
-
-# # RECURSIVE CHARACTER TEXT SPLITTER (LESS INTELLIGENT)
-# def split_data(loaded_data):
-#     text_splitter = RecursiveCharacterTextSplitter(
-#         chunk_size = 500,
-#         chunk_overlap = 200,
-#         length_function = len,
-#         is_separator_regex=False,
-#     )
-#     chunks = text_splitter.split_documents(loaded_data)
-#     print(f"Split {len(loaded_data)} data sets into {len(chunks)} chunks.")
-
-#     return chunks
 
 
 
@@ -148,8 +88,6 @@ def ask_again():
 
 # main function that executes all other functions
 def main():
-    # saving_api_response_to_txt()
-    # documents = load_data()
     chunks = split_data()
     save_to_chroma(chunks)
     prompt()
