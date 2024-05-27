@@ -1,5 +1,6 @@
 # Importing requred libraries of python
 from langchain_experimental.text_splitter import SemanticChunker
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.chat_models import ChatOpenAI
@@ -16,24 +17,24 @@ CHROMA_PATH = "Vector_Database/"             # Directory for saving the vector d
 
 
 # OPEN AI API key in use
-Open_ai = "sk-"
+Open_ai = "sk"
 
+custom_separators = ["}, {\'url\':"]
 
-# SEMANTIC CHUNKER (MOST INTELLIGENT)
 def split_data():
-    
     from api_text import api_data
-
     api_data_str = str(api_data)
-
-    text_splitter = SemanticChunker(
-        OpenAIEmbeddings(openai_api_key=Open_ai), breakpoint_threshold_type="percentile"
-    ) 
+    text_splitter = RecursiveCharacterTextSplitter(
+        separators = custom_separators,
+        chunk_size = 1700,
+        chunk_overlap = 50,
+        length_function = len
+    )
     chunks = text_splitter.create_documents([api_data_str])
-    print(f"Split {len(api_data)} data sets into {len(chunks)} chunks.")
+    print(f"Split {len([api_data_str])} data sets into {len(chunks)} chunks.")
+    print(chunks[1])
     return chunks
-
-
+split_data()
 
 # Saving the chunks to the vector database
 def save_to_chroma(chunks):
@@ -79,6 +80,8 @@ def prompt():
     response_text = model.invoke(prompt)
     print(response_text)
 
+    ask_again()
+
 def ask_again():
     again = input("Would you like to ask another question? (yes/no) \n \t")
     if again.lower() == "yes":
@@ -90,8 +93,7 @@ def ask_again():
 def main():
     chunks = split_data()
     save_to_chroma(chunks)
-    prompt()
-    ask_again()        
+    prompt()      
 
 
 # calling the main function    
